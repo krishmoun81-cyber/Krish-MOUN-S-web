@@ -1,0 +1,335 @@
+```html
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Krish Moun | Author, Cosmological Essayist & Storyteller</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        paper: {
+                            50: '#FDFBF7',
+                            100: '#F7F3E9',
+                            200: '#EFE7D5',
+                            300: '#E0D2B4',
+                            800: '#2A2621',
+                            900: '#1A1918',
+                        },
+                        ink: {
+                            light: '#4A463D',
+                            DEFAULT: '#1A1918',
+                            muted: '#7A7568',
+                        },
+                        accent: {
+                            amber: '#965215',
+                            crimson: '#8B263E',
+                            sage: '#4A6B5D',
+                            gold: '#C59B27',
+                            sepia: '#F4ECD8'
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['Playfair Display', 'Cormorant Garamond', 'Georgia', 'serif'],
+                        body: ['Lora', 'Georgia', 'serif'],
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #FDFBF7;
+            color: #1A1918;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .dark body {
+            background-color: #121110;
+            color: #EFE7D5;
+        }
+
+        .paper-bg {
+            background-color: #FDFBF7;
+            background-image: radial-gradient(#1A1918 0.5px, transparent 0.5px);
+            background-size: 24px 24px;
+            background-opacity: 0.03;
+        }
+
+        .dark .paper-bg {
+            background-color: #121110;
+            background-image: radial-gradient(#EFE7D5 0.5px, transparent 0.5px);
+            background-size: 24px 24px;
+            background-opacity: 0.03;
+        }
+
+        /* Custom Scrollbars */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #D5C8AF;
+            border-radius: 3px;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #3A352E;
+        }
+
+        /* Reader View Themes */
+        .reader-theme-light {
+            background-color: #FDFBF7 !important;
+            color: #1A1918 !important;
+        }
+        .reader-theme-sepia {
+            background-color: #F4ECD8 !important;
+            color: #432E1B !important;
+        }
+        .reader-theme-dark {
+            background-color: #181716 !important;
+            color: #E5DEC9 !important;
+        }
+    </style>
+</head>
+<body class="font-body antialiased selection:bg-accent-amber/20 selection:text-accent-amber">
+
+    <!-- READING DRAWER / MODAL -->
+    <div id="readerModal" class="fixed inset-0 z-50 hidden overflow-y-auto bg-black/60 backdrop-blur-sm transition-opacity duration-300">
+        <div class="min-h-screen px-4 text-center">
+            <!-- Modal Box -->
+            <div id="readerBox" class="inline-block w-full max-w-3xl my-8 p-6 sm:p-12 text-left align-middle transition-all transform shadow-2xl rounded-2xl reader-theme-light border border-paper-300/40 relative">
+                
+                <!-- Controls Header -->
+                <div class="sticky top-0 z-10 -mx-6 -mt-6 sm:-mx-12 sm:-mt-12 p-4 sm:p-6 mb-8 border-b border-black/10 dark:border-white/10 flex flex-wrap items-center justify-between gap-4 bg-inherit backdrop-blur-md rounded-t-2xl">
+                    <div class="flex items-center space-x-2 text-xs font-sans tracking-wider uppercase opacity-70">
+                        <i data-lucide="book-open" class="w-4 h-4"></i>
+                        <span id="readerReadTime">5 min read</span>
+                    </div>
+
+                    <!-- Reader Customization Controls -->
+                    <div class="flex items-center space-x-3">
+                        <!-- Font Size Adjuster -->
+                        <div class="flex items-center border border-black/10 dark:border-white/10 rounded-lg p-1 space-x-1">
+                            <button onclick="adjustReaderFont(-1)" class="px-2 py-1 text-xs hover:bg-black/5 dark:hover:bg-white/5 rounded font-sans font-bold">A-</button>
+                            <button onclick="adjustReaderFont(1)" class="px-2 py-1 text-xs hover:bg-black/5 dark:hover:bg-white/5 rounded font-sans font-bold">A+</button>
+                        </div>
+
+                        <!-- Theme Toggle (Light / Sepia / Dark) -->
+                        <div class="flex items-center border border-black/10 dark:border-white/10 rounded-lg p-1 space-x-1 text-xs">
+                            <button onclick="setReaderTheme('light')" class="w-6 h-6 rounded-full bg-[#FDFBF7] border border-black/20" title="Paper White"></button>
+                            <button onclick="setReaderTheme('sepia')" class="w-6 h-6 rounded-full bg-[#F4ECD8] border border-black/20" title="Warm Sepia"></button>
+                            <button onclick="setReaderTheme('dark')" class="w-6 h-6 rounded-full bg-[#181716] border border-white/20" title="Night Charcoal"></button>
+                        </div>
+
+                        <!-- Close Button -->
+                        <button onclick="closeReaderModal()" class="p-2 hover:bg-black/5 dark:hover:bg-white/5 rounded-full transition-colors">
+                            <i data-lucide="x" class="w-5 h-5"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Excerpt Content -->
+                <article class="max-w-xl mx-auto space-y-6">
+                    <div class="text-center space-y-2 pb-6 border-b border-black/10 dark:border-white/10">
+                        <span id="readerCategory" class="text-xs font-sans uppercase tracking-widest text-accent-amber font-semibold">Essay</span>
+                        <h2 id="readerTitle" class="text-3xl sm:text-4xl font-serif font-bold">The Void as Canvas</h2>
+                        <p id="readerSubtitle" class="text-sm italic opacity-75">Reflections on quantum fluctuations and empty space</p>
+                    </div>
+
+                    <div id="readerBody" class="prose dark:prose-invert font-body text-base sm:text-lg leading-relaxed space-y-5">
+                        <!-- Dynamic Text Injected Here -->
+                    </div>
+                </article>
+
+                <div class="mt-12 pt-6 border-t border-black/10 dark:border-white/10 text-center">
+                    <p class="text-xs font-sans opacity-60">Published by <span id="readerPublication">Krish Moun Writings</span> &bull; 2026</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- BOOK PREVIEW MODAL -->
+    <div id="bookModal" class="fixed inset-0 z-50 hidden overflow-y-auto bg-black/60 backdrop-blur-sm transition-opacity duration-300">
+        <div class="min-h-screen px-4 text-center flex items-center justify-center">
+            <div class="inline-block w-full max-w-2xl my-8 p-6 sm:p-10 text-left align-middle transition-all transform bg-paper-50 dark:bg-paper-900 shadow-2xl rounded-2xl border border-paper-300/40 relative">
+                <button onclick="closeBookModal()" class="absolute top-4 right-4 p-2 hover:bg-paper-200 dark:hover:bg-paper-800 rounded-full">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+
+                <div class="grid sm:grid-cols-12 gap-6 items-start">
+                    <div class="sm:col-span-4 flex justify-center">
+                        <div id="bookModalCover" class="w-40 h-56 rounded-lg bg-gradient-to-br from-accent-amber via-paper-800 to-black text-white p-4 shadow-xl flex flex-col justify-between border-l-4 border-accent-gold">
+                            <div class="space-y-1">
+                                <span class="text-[9px] font-sans uppercase tracking-widest text-accent-gold">Krish Moun</span>
+                                <h4 class="font-serif text-sm font-bold leading-snug">Discovery of Space in Nothing</h4>
+                            </div>
+                            <div class="text-[9px] font-sans opacity-70">Cosmological Treatise</div>
+                        </div>
+                    </div>
+                    <div class="sm:col-span-8 space-y-4">
+                        <span id="bookModalGenre" class="text-xs font-sans uppercase tracking-widest text-accent-amber font-bold">Astrophysics & Philosophy</span>
+                        <h3 id="bookModalTitle" class="text-2xl font-serif font-bold text-paper-900 dark:text-paper-100">Discovery of Space in Nothing</h3>
+                        <p id="bookModalBlurb" class="text-sm text-ink-light dark:text-paper-200 leading-relaxed">
+                            A profound exploration into quantum emptiness, expanding dark energy, and how the universe creates matter and spatial dimensions out of absolute void.
+                        </p>
+                        
+                        <div class="pt-2">
+                            <h4 class="text-xs font-sans font-bold uppercase tracking-wider text-ink-muted mb-2">Selected Excerpts & Chapters</h4>
+                            <ul id="bookModalChapters" class="text-xs space-y-2">
+                                <!-- Chapter Items Injected -->
+                            </ul>
+                        </div>
+
+                        <div class="pt-4 flex flex-wrap gap-3">
+                            <a id="bookModalBuyLink" href="#contact" onclick="closeBookModal()" class="px-5 py-2.5 rounded-full bg-accent-amber text-white text-xs font-sans font-semibold hover:bg-opacity-90 transition-all flex items-center">
+                                <i data-lucide="shopping-bag" class="w-3.5 h-3.5 mr-2"></i> Order Copy
+                            </a>
+                            <button id="bookModalSampleBtn" onclick="closeBookModal(); openReaderModal('void');" class="px-5 py-2.5 rounded-full border border-paper-300 dark:border-paper-800 text-xs font-sans font-semibold hover:bg-paper-100 dark:hover:bg-paper-800 transition-all flex items-center">
+                                <i data-lucide="book-open" class="w-3.5 h-3.5 mr-2"></i> Read Sample Excerpt
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN NAVBAR -->
+    <header class="sticky top-0 z-40 bg-paper-50/90 dark:bg-paper-900/90 backdrop-blur-md border-b border-paper-200/80 dark:border-paper-800/80 transition-colors">
+        <div class="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
+            <!-- Brand Mark -->
+            <a href="#" class="group flex items-center space-x-3">
+                <span class="font-serif text-2xl font-bold tracking-tight text-paper-900 dark:text-paper-50 group-hover:text-accent-amber transition-colors">
+                    Krish Moun
+                </span>
+                <span class="text-xs font-sans tracking-widest text-accent-amber uppercase border-l border-paper-300 dark:border-paper-800 pl-3 py-1 hidden sm:inline-block">
+                    Author & Essayist
+                </span>
+            </a>
+
+            <!-- Navigation Links -->
+            <nav class="hidden md:flex items-center space-x-8 text-xs font-sans font-medium uppercase tracking-wider text-ink-light dark:text-paper-200">
+                <a href="#about" class="hover:text-accent-amber transition-colors">Biography</a>
+                <a href="#works" class="hover:text-accent-amber transition-colors">Bibliography</a>
+                <a href="#desk" class="hover:text-accent-amber transition-colors">Behind the Desk</a>
+                <a href="#press" class="hover:text-accent-amber transition-colors">Acclaim</a>
+                <a href="#contact" class="hover:text-accent-amber transition-colors">Dispatch & Contact</a>
+            </nav>
+
+            <!-- Actions -->
+            <div class="flex items-center space-x-4">
+                <!-- Theme Mode Toggle -->
+                <button id="themeToggleBtn" onclick="toggleDarkMode()" class="p-2 rounded-full hover:bg-paper-200 dark:hover:bg-paper-800 transition-colors text-ink dark:text-paper-100">
+                    <i data-lucide="moon" class="w-4 h-4 dark:hidden"></i>
+                    <i data-lucide="sun" class="w-4 h-4 hidden dark:block"></i>
+                </button>
+
+                <!-- Mobile Menu Button -->
+                <button onclick="toggleMobileMenu()" class="md:hidden p-2 rounded-lg text-paper-900 dark:text-paper-100">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Drawer Menu -->
+        <div id="mobileMenu" class="hidden md:hidden bg-paper-100 dark:bg-paper-800 border-b border-paper-200 dark:border-paper-700 px-6 py-6 space-y-4 text-xs font-sans uppercase tracking-wider">
+            <a href="#about" onclick="toggleMobileMenu()" class="block py-1 hover:text-accent-amber">Biography</a>
+            <a href="#works" onclick="toggleMobileMenu()" class="block py-1 hover:text-accent-amber">Bibliography</a>
+            <a href="#desk" onclick="toggleMobileMenu()" class="block py-1 hover:text-accent-amber">Behind the Desk</a>
+            <a href="#press" onclick="toggleMobileMenu()" class="block py-1 hover:text-accent-amber">Acclaim</a>
+            <a href="#contact" onclick="toggleMobileMenu()" class="block py-1 hover:text-accent-amber">Dispatch & Contact</a>
+        </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section class="relative py-20 lg:py-28 px-6 paper-bg border-b border-paper-200 dark:border-paper-800 overflow-hidden">
+        <div class="max-w-6xl mx-auto grid lg:grid-cols-12 gap-12 items-center">
+            
+            <!-- Hero Content -->
+            <div class="lg:col-span-7 space-y-8">
+                <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-accent-amber/10 border border-accent-amber/20 text-accent-amber text-xs font-sans font-medium">
+                    <i data-lucide="feather" class="w-3.5 h-3.5"></i>
+                    <span>Featured Treatise & Cosmological Narrative</span>
+                </div>
+
+                <h1 class="font-serif text-4xl sm:text-6xl lg:text-7xl font-normal text-paper-900 dark:text-paper-50 leading-[1.15]">
+                    Uncovering the infinite <em class="italic font-serif font-light text-accent-amber">geometry of space</em> within absolute nothingness.
+                </h1>
+
+                <p class="text-base sm:text-lg font-body text-ink-light dark:text-paper-200 max-w-xl leading-relaxed">
+                    Krish Moun is a writer, author, and cosmological thinker whose work traverses the boundaries of astrophysics, philosophy, and longform literature.
+                </p>
+
+                <div class="flex flex-wrap items-center gap-4 pt-2">
+                    <a href="#works" class="px-7 py-3.5 rounded-full bg-paper-900 dark:bg-paper-100 text-paper-50 dark:text-paper-900 font-sans text-xs uppercase tracking-wider font-semibold hover:bg-accent-amber dark:hover:bg-accent-amber dark:hover:text-white transition-all shadow-md">
+                        Explore Bibliography
+                    </a>
+                    <a href="#contact" class="px-7 py-3.5 rounded-full border border-paper-300 dark:border-paper-700 text-paper-900 dark:text-paper-100 font-sans text-xs uppercase tracking-wider font-semibold hover:bg-paper-200 dark:hover:bg-paper-800 transition-all">
+                        Subscribe to Dispatch
+                    </a>
+                </div>
+
+                <!-- Stats Strip -->
+                <div class="pt-8 grid grid-cols-3 gap-6 border-t border-paper-200 dark:border-paper-800 max-w-md">
+                    <div>
+                        <div class="font-serif text-2xl font-bold text-accent-amber">01</div>
+                        <div class="text-xs font-sans text-ink-muted dark:text-paper-300 uppercase tracking-wider mt-0.5">Major Book</div>
+                    </div>
+                    <div>
+                        <div class="font-serif text-2xl font-bold text-accent-amber">40+</div>
+                        <div class="text-xs font-sans text-ink-muted dark:text-paper-300 uppercase tracking-wider mt-0.5">Essays & Articles</div>
+                    </div>
+                    <div>
+                        <div class="font-serif text-2xl font-bold text-accent-amber">95k</div>
+                        <div class="text-xs font-sans text-ink-muted dark:text-paper-300 uppercase tracking-wider mt-0.5">Monthly Readers</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hero Book Showcase -->
+            <div class="lg:col-span-5 relative flex justify-center">
+                <div class="relative w-72 sm:w-80 h-[420px] rounded-2xl bg-paper-200 dark:bg-paper-800 p-6 shadow-2xl border border-paper-300 dark:border-paper-700 transform rotate-1 hover:rotate-0 transition-transform duration-500">
+                    <div class="w-full h-full rounded-xl bg-gradient-to-b from-paper-900 via-paper-800 to-black text-paper-100 p-6 flex flex-col justify-between border-l-8 border-accent-gold relative overflow-hidden">
+                        
+                        <div class="space-y-2">
+                            <span class="text-[10px] font-sans uppercase tracking-widest text-accent-gold">Krish Moun</span>
+                            <h3 class="font-serif text-2xl font-bold leading-tight">Discovery of Space in Nothing</h3>
+                            <p class="text-xs font-body opacity-75">A Cosmological Investigation</p>
+                        </div>
+
+                        <div class="py-6 my-auto text-center italic font-serif text-sm opacity-90 border-y border-white/10">
+                            "A poetic and rigorous voyage to the edge of quantum vacuum and spatial origin."
+                            <span class="block text-[10px] font-sans not-italic uppercase tracking-widest text-accent-gold mt-2">&mdash; Quantum & Cosmos Review</span>
+                        </div>
+
+                        <div class="flex items-center justify-between text-xs font-sans pt-2">
+                            <span>Main Release</span>
+                            <button onclick="openBookModal('nothing')" class="text-accent-gold hover:underline font-semibold flex items-center">
+                                Preview Book <i data-lucide="chevron-right" class="w-3.5 h-3.5 ml-1"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- SECTION: AUTHOR BIOGRAPHY -->
+    <section id="about" class="py-20 px-6 bg-paper-100/60 dark:bg-paper-900/40 border-b border-paper-200 dark:border-paper-800">
